@@ -61,9 +61,9 @@ export class ContractParser {
           safety,
           agentSafe: deriveAgentSafe(safety),
           requiredAuth: inferActionAuth({ safety, isReadOnly, type: 'contract' }),
-          inputs: this.mapAbiInputs(item.inputs ?? []),
-          outputs: {
-            type: this.mapAbiOutputs(item.outputs ?? []),
+          parameters: this.mapAbiInputs(item.parameters ?? []),
+          returns: {
+            type: this.mapAbiOutputs(item.returns ?? []),
             description: '',
           },
         });
@@ -133,7 +133,7 @@ export class ContractParser {
           (item: any) => item.type === 'function' && item.name === functionName
         );
         if (abiFunc) {
-          parameters = this.mapAbiInputs(abiFunc.inputs ?? []);
+          parameters = this.mapAbiInputs(abiFunc.parameters ?? []);
         }
       }
 
@@ -150,8 +150,8 @@ export class ContractParser {
         safety,
         agentSafe: deriveAgentSafe(safety),
         requiredAuth: inferActionAuth({ safety, isReadOnly: false, type: 'contract' }),
-        inputs: parameters,
-        outputs: { type: 'any' },
+        parameters: parameters,
+        returns: { type: 'any' },
       });
     });
 
@@ -269,9 +269,9 @@ export class ContractParser {
     return null;
   }
 
-  private mapAbiInputs(inputs: any[]): Record<string, any> {
+  private mapAbiInputs(parameters: any[]): Record<string, any> {
     const props: Record<string, any> = {};
-    for (const input of inputs) {
+    for (const input of parameters) {
       props[input.name || 'arg'] = {
         type: this.mapSolidityType(input.type),
         description: `Solidity type: ${input.type}`,
@@ -281,9 +281,9 @@ export class ContractParser {
     return props;
   }
 
-  private mapAbiOutputs(outputs: any[]): string {
-    if (!outputs.length) return 'void';
-    if (outputs.length === 1) return this.mapSolidityType(outputs[0].type);
+  private mapAbiOutputs(returns: any[]): string {
+    if (!returns.length) return 'void';
+    if (returns.length === 1) return this.mapSolidityType(returns[0].type);
     return 'object';
   }
 

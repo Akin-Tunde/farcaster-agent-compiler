@@ -73,8 +73,8 @@ export class WebSocketParser {
             safety,
             agentSafe: deriveAgentSafe(safety),
             requiredAuth: inferActionAuth({ safety, type: 'socket' }),
-            inputs: { type: { type: 'string', required: true }, payload: { type: 'object', required: false } },
-            outputs: { type: 'object' },
+            parameters: { type: { type: 'string', required: true }, payload: { type: 'object', required: false } },
+            returns: { type: 'object' },
           } as any);
         }
       } else {
@@ -92,8 +92,8 @@ export class WebSocketParser {
             safety: 'write',
             agentSafe: true,
             requiredAuth: inferActionAuth({ safety: 'write', type: 'socket' }),
-            inputs: { data: { type: 'string', required: true } },
-            outputs: { type: 'object' },
+            parameters: { data: { type: 'string', required: true } },
+            returns: { type: 'object' },
           } as any);
         }
       }

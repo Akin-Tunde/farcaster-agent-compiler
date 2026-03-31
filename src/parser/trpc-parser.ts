@@ -80,8 +80,8 @@ export class TRPCParser {
           appAuthType: isProtected ? 'bearer' : undefined,
           type: 'function',
         }),
-        inputs,
-        outputs: { type: 'object' },
+        parameters: inputs,
+        returns: { type: 'object' },
       });
     });
 
@@ -123,18 +123,18 @@ export class TRPCParser {
     const arg = node.getArguments()[0];
     if (!Node.isObjectLiteralExpression(arg)) return {};
 
-    const inputs: Record<string, any> = {};
+    const parameters: Record<string, any> = {};
     for (const prop of arg.getProperties()) {
       if (!Node.isPropertyAssignment(prop)) continue;
       const name = (prop as any).getName().replace(/['"]/g, '');
       const valText = prop.getInitializer()?.getText() ?? '';
       const optional = valText.includes('.optional()') || valText.includes('.nullish()');
-      inputs[name] = {
+      parameters[name] = {
         type: this.inferZodType(valText),
         required: !optional,
       };
     }
-    return inputs;
+    return parameters;
   }
 
   private inferZodType(zodText: string): string {

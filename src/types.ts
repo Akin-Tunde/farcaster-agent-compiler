@@ -66,8 +66,11 @@ export interface AgentAction {
   safety: SafetyLevel;
   /** True when the action can be executed autonomously without human confirmation */
   agentSafe: boolean;
-  inputs: Record<string, ParameterProperty>;
-  outputs: {
+   // ✅ FIXED: Changed 'inputs' to 'parameters'
+  parameters: Record<string, ParameterProperty>; 
+
+  // ✅ FIXED: Changed 'outputs' to 'returns'
+  returns: {
     type: string;
     description?: string;
   };

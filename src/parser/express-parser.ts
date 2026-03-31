@@ -86,8 +86,8 @@ export class ExpressParser {
         safety,
         agentSafe: deriveAgentSafe(safety),
         requiredAuth: inferActionAuth({ safety, httpMethod, type: 'api' }),
-        inputs: this.extractRouteParams(routePath),
-        outputs: { type: 'any' },
+        parameters: this.extractRouteParams(routePath),
+        returns: { type: 'any' },
       });
     });
 

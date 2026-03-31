@@ -82,7 +82,7 @@ export class SocketIOParser {
         agentSafe: deriveAgentSafe(safety),
         requiredAuth: inferActionAuth({ safety, type: 'socket' }),
         inputs,
-        outputs: { type: 'object' },
+        returns: { type: 'object' },
       } as any);
     });
 
@@ -100,28 +100,28 @@ export class SocketIOParser {
     // Prefer explicit type annotation on the parameter: ({ col }: { col: number })
     const typeNode = firstParam.getTypeNode?.();
     if (typeNode && Node.isTypeLiteral(typeNode)) {
-      const inputs: Record<string, any> = {};
+      const parameters: Record<string, any> = {};
       for (const member of typeNode.getMembers()) {
         if (!Node.isPropertySignature(member)) continue;
         const name = member.getName();
         const optional = member.hasQuestionToken();
         const tsType = member.getTypeNode()?.getText() ?? 'any';
-        inputs[name] = {
+        parameters[name] = {
           type: this.tsTypeToJsonType(tsType),
           required: !optional,
         };
       }
-      return inputs;
+      return parameters;
     }
 
     // Fallback: read names from the destructuring pattern only (no type info)
-    const inputs: Record<string, any> = {};
+    const parameters: Record<string, any> = {};
     for (const element of bindingPattern.getElements()) {
       if (Node.isBindingElement(element)) {
-        inputs[element.getName()] = { type: 'any', required: true };
+        parameters[element.getName()] = { type: 'any', required: true };
       }
     }
-    return inputs;
+    return parameters;
   }
 
   private tsTypeToJsonType(ts: string): string {

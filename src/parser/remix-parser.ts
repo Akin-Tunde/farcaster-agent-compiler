@@ -50,8 +50,8 @@ export class RemixParser {
         safety,
         agentSafe: deriveAgentSafe(safety),
         requiredAuth: inferActionAuth({ safety, httpMethod, type: 'api' }),
-        inputs: this.extractRouteParams(routePath),
-        outputs: { type: 'object' },
+        parameters: this.extractRouteParams(routePath),
+        returns: { type: 'object' },
       });
     }
 

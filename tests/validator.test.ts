@@ -32,9 +32,9 @@ function validateManifest(m: any): string[] {
       if (typeof action.agentSafe !== 'boolean') errors.push(`${prefix}: \`agentSafe\` must be boolean`);
       if (!action.requiredAuth || !['public','required','farcaster-signed'].includes(action.requiredAuth.required))
         errors.push(`${prefix}: invalid \`requiredAuth.required\``);
-      if (typeof action.inputs !== 'object' || Array.isArray(action.inputs))
+      if (typeof action.parameters !== 'object' || Array.isArray(action.parameters))
         errors.push(`${prefix}: \`inputs\` must be an object`);
-      if (!action.outputs || typeof action.outputs.type !== 'string')
+      if (!action.returns || typeof action.returns.type !== 'string')
         errors.push(`${prefix}: \`outputs.type\` must be a string`);
     });
   }
@@ -50,8 +50,8 @@ const validAction = {
   safety: 'financial',
   agentSafe: false,
   requiredAuth: { required: 'required' },
-  inputs: {},
-  outputs: { type: 'void' },
+  parameters: {},
+  returns: { type: 'void' },
 };
 
 const validManifest = {

@@ -36,7 +36,7 @@ export class PrismaParser {
         [idField.name]: { type: this.prismaTypeToJson(idField.type), required: true },
       };
 
-      const writeInputs: Record<string, any> = {};
+      const writeInputs: Record<string, any> = {}; 
       for (const f of writeableFields) {
         writeInputs[f.name] = {
           type: this.prismaTypeToJson(f.type),
@@ -54,8 +54,8 @@ export class PrismaParser {
         safety: 'read',
         agentSafe: true,
         requiredAuth: inferActionAuth({ safety: 'read', httpMethod: 'GET', type: 'function' }),
-        inputs: {},
-        outputs: { type: 'array', description: `Array of ${name}` },
+        parameters: {},
+        returns: { type: 'array', description: `Array of ${name}` },
       });
 
       // get
@@ -68,8 +68,8 @@ export class PrismaParser {
         safety: 'read',
         agentSafe: true,
         requiredAuth: inferActionAuth({ safety: 'read', httpMethod: 'GET', type: 'function' }),
-        inputs: idInput,
-        outputs: { type: 'object', description: name },
+        parameters: idInput,
+        returns: { type: 'object', description: name },
       });
 
       // create
@@ -82,8 +82,8 @@ export class PrismaParser {
         safety: 'write',
         agentSafe: deriveAgentSafe('write'),
         requiredAuth: inferActionAuth({ safety: 'write', type: 'function' }),
-        inputs: writeInputs,
-        outputs: { type: 'object', description: `Created ${name}` },
+        parameters: writeInputs,
+        returns: { type: 'object', description: `Created ${name}` },
       });
 
       // update
@@ -96,8 +96,8 @@ export class PrismaParser {
         safety: 'write',
         agentSafe: deriveAgentSafe('write'),
         requiredAuth: inferActionAuth({ safety: 'write', type: 'function' }),
-        inputs: { ...idInput, ...writeInputs },
-        outputs: { type: 'object', description: `Updated ${name}` },
+        parameters: { ...idInput, ...writeInputs },
+        returns: { type: 'object', description: `Updated ${name}` },
       });
 
       // delete
@@ -110,8 +110,8 @@ export class PrismaParser {
         safety: 'destructive',
         agentSafe: false,
         requiredAuth: inferActionAuth({ safety: 'destructive', type: 'function' }),
-        inputs: idInput,
-        outputs: { type: 'object', description: `Deleted ${name}` },
+        parameters: idInput,
+        returns: { type: 'object', description: `Deleted ${name}` },
       });
 
       void lower; // suppress unused-variable warning

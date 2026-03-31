@@ -11,8 +11,8 @@ export function FlipGame() {
         name: 'flip',
         type: 'function',
         stateMutability: 'payable',
-        inputs: [{ name: 'choice', type: 'uint8' }],
-        outputs: [],
+        parameters: [{ name: 'choice', type: 'uint8' }],
+        returns: [],
       }],
       functionName: 'flip',
       args: [1], // 1 for heads

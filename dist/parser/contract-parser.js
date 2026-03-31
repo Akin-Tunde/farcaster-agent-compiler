@@ -95,9 +95,9 @@ class ContractParser {
                     safety,
                     agentSafe: (0, intent_classifier_1.deriveAgentSafe)(safety),
                     requiredAuth: (0, intent_classifier_1.inferActionAuth)({ safety, isReadOnly, type: 'contract' }),
-                    inputs: this.mapAbiInputs(item.inputs ?? []),
-                    outputs: {
-                        type: this.mapAbiOutputs(item.outputs ?? []),
+                    parameters: this.mapAbiInputs(item.parameters ?? []),
+                    returns: {
+                        type: this.mapAbiOutputs(item.returns ?? []),
                         description: '',
                     },
                 });
@@ -158,7 +158,7 @@ class ContractParser {
             if (abi) {
                 const abiFunc = abi.find((item) => item.type === 'function' && item.name === functionName);
                 if (abiFunc) {
-                    parameters = this.mapAbiInputs(abiFunc.inputs ?? []);
+                    parameters = this.mapAbiInputs(abiFunc.parameters ?? []);
                 }
             }
             const safety = (0, intent_classifier_1.classifySafety)({ name: functionName, isReadOnly: false, type: 'contract' });
@@ -174,8 +174,8 @@ class ContractParser {
                 safety,
                 agentSafe: (0, intent_classifier_1.deriveAgentSafe)(safety),
                 requiredAuth: (0, intent_classifier_1.inferActionAuth)({ safety, isReadOnly: false, type: 'contract' }),
-                inputs: parameters,
-                outputs: { type: 'any' },
+                parameters: parameters,
+                returns: { type: 'any' },
             });
         });
         return actions;
@@ -285,9 +285,9 @@ class ContractParser {
         }
         return null;
     }
-    mapAbiInputs(inputs) {
+    mapAbiInputs(parameters) {
         const props = {};
-        for (const input of inputs) {
+        for (const input of parameters) {
             props[input.name || 'arg'] = {
                 type: this.mapSolidityType(input.type),
                 description: `Solidity type: ${input.type}`,
@@ -296,11 +296,11 @@ class ContractParser {
         }
         return props;
     }
-    mapAbiOutputs(outputs) {
-        if (!outputs.length)
+    mapAbiOutputs(returns) {
+        if (!returns.length)
             return 'void';
-        if (outputs.length === 1)
-            return this.mapSolidityType(outputs[0].type);
+        if (returns.length === 1)
+            return this.mapSolidityType(returns[0].type);
         return 'object';
     }
     mapSolidityType(type) {

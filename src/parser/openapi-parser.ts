@@ -36,9 +36,9 @@ export class OpenAPIParser {
         const safety = classifySafety({ name: operationId, httpMethod, type: 'api' });
 
         // Extract parameters (path + query + header)
-        const inputs: Record<string, any> = {};
+        const parameters: Record<string, any> = {};
         for (const param of operation.parameters ?? []) {
-          inputs[param.name] = {
+          parameters[param.name] = {
             type: param.schema?.type ?? 'string',
             description: param.description,
             required: param.required ?? false,
@@ -51,7 +51,7 @@ export class OpenAPIParser {
         if (bodySchema?.properties) {
           const required: string[] = bodySchema.required ?? [];
           for (const [field, schema] of Object.entries(bodySchema.properties as Record<string, any>)) {
-            inputs[field] = {
+            parameters[field] = {
               type: schema.type ?? 'any',
               description: schema.description,
               required: required.includes(field),
@@ -76,8 +76,8 @@ export class OpenAPIParser {
           requiredAuth: hasSecurity
             ? { required: 'required' }
             : inferActionAuth({ safety, httpMethod, type: 'api' }),
-          inputs,
-          outputs: this.extractOutputSchema(operation),
+          parameters,
+          returns: this.extractOutputSchema(operation),
         });
       }
     }
